@@ -24,17 +24,23 @@ function state_name(state) {
 }
 
 let output = `// Auto-generated from ${fn}\n`;
+output += `#include <cstddef>\n`;
+output += `#include <cstdint>\n`;
+
 for(const mod of states) {
   const struct_name = mod.name + '_state';
   let struct = `struct ${struct_name} {\n`;
+  struct += `  struct IO {\n`
   for(const state of mod.states) {
     const ty = type_lookup(state.numBits);
-    struct += `  ${ty} ${state_name(state)};\n`;
+    struct += `    ${ty} ${state_name(state)};\n`;
   }
+  struct += `  } io;\n`
+  struct += `  uint8_t _state[${mod.numStateBytes} - sizeof(IO)];\n`;
   struct += `};\n`
   struct += `static_assert(sizeof(${struct_name}) == ${mod.numStateBytes});\n`
   for(const state of mod.states)
-    struct += `static_assert(offsetof(${struct_name}, ${state_name(state)}) == ${state.offset});\n`;
+    struct += `static_assert(offsetof(${struct_name}, io.${state_name(state)}) == ${state.offset});\n`;
 
   output += struct;
 }
