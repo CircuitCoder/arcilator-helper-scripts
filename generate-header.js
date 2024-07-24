@@ -32,7 +32,7 @@ for(const mod of states) {
     struct += `  ${ty} ${state_name(state)};\n`;
   }
   struct += `};\n`
-  struct += `static_assert(sizeof(${struct_name}) == ${mod.numStateBytes});`
+  struct += `static_assert(sizeof(${struct_name}) == ${mod.numStateBytes});\n`
   for(const state of mod.states)
     struct += `static_assert(offsetof(${struct_name}, ${state_name(state)}) == ${state.offset});\n`;
 
