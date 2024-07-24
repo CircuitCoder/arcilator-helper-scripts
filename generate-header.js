@@ -36,7 +36,7 @@ for(const mod of states) {
     struct += `    ${ty} ${state_name(state)};\n`;
   }
   struct += `  } io;\n`
-  struct += `  const volatile uint8_t _state[${mod.numStateBytes} - sizeof(IO)];\n`;
+  struct += `  volatile uint8_t _state[${mod.numStateBytes} - sizeof(IO)];\n`;
   struct += `};\n`
   struct += `static_assert(sizeof(${struct_name}) == ${mod.numStateBytes});\n`
   for(const state of mod.states)
